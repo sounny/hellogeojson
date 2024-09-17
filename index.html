@@ -8,7 +8,7 @@
 
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
- <title>Hello Leaflet</title>
+ <title>Mega Cities of the World</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -33,8 +33,23 @@
     <div id="map"></div>
 
     <script>    
-        var map = L.map('map').setView([29.6436, -82.3549], 13);
-        
+        var map = L.map('map').fitWorld();
+
+        fetch('MegaCities.geojson')
+            .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+            })
+            .then(data => {
+            L.geoJSON(data).addTo(map);
+            })
+            .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+
+
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
